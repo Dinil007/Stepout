@@ -1,0 +1,1 @@
+"""Detection module for YOLO-based player and ball detection."""

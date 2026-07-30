@@ -1,0 +1,46 @@
+venv/
+__pycache__/
+**/__pycache__/
+.env
+*.pyc
+*.pyo
+
+# Model weights & large binaries
+*.pt
+*.pth
+*.onnx
+*.engine
+*.pkl
+weights/
+models/
+
+# Datasets & media
+datasets/
+SoccerNet/
+uploads/
+videos/
+outputs/
+misclassified/
+reports/
+
+# Logs & temp files
+logs/
+*.log
+pipeline_output*.log
+pipeline.log
+tmp_*.py
+
+# Notebooks checkpoints
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Docker volumes / runtime
+.streamlit/secrets.toml

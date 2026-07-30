@@ -1,0 +1,150 @@
+# StepOut Football Analytics Platform - Configuration File
+
+device: "cuda"
+
+models:
+  yolo_model_path: "yolov8x.pt"
+  confidence_threshold: 0.25
+  iou_threshold: 0.5
+  image_size: 640
+  ball_image_size: 960
+  ball_confidence_threshold: 0.10
+  classes: [0, 32]
+
+preprocessing:
+  enabled: true
+  white_balance:
+    enabled: true
+    chroma_offset: 0.6
+  gamma:
+    brighten_gamma: 1.18
+    darken_gamma: 0.92
+    brightness_darken_threshold: 185
+    brightness_brighten_threshold: 85
+    overexposed_ratio_threshold: 0.08
+  clahe:
+    enabled: true
+    clip_limit: 1.8
+    grid_size: [8, 8]
+    contrast_threshold: 42
+  denoise:
+    enabled: true
+    noise_threshold: 9.0
+    h: 3
+    h_color: 3
+    template_window_size: 7
+    search_window_size: 21
+  adaptive_sharpen:
+    enabled: true
+    laplacian_blur_threshold: 95
+    motion_blur_threshold: 0.28
+    sharpen_strength: 0.30
+
+detection_filter:
+  foot_margin_px: 28.0
+  ball_center_margin_px: 65.0
+  min_player_height: 16
+  min_player_confidence: 0.0
+  min_aspect_ratio: 0.12
+  max_aspect_ratio: 0.95
+  max_ball_area: 2600
+  homography_reject_out_of_bounds: true
+  homography_margin_m: 2.0
+
+video:
+  input_path: "D:/stepout/videos/raw/match30.mp4"
+  output_dir: "outputs"
+  max_frames: 750
+  fps: 25.0
+  resolution:
+    - 1280
+    - 720
+
+pitch:
+  length_m: 105.0
+  width_m: 68.0
+  canvas_width: 1050
+  canvas_height: 680
+  goal_width_m: 7.32
+  roi_polygon:
+    - [12, 520]
+    - [1827, 492]
+    - [1875, 793]
+    - [81, 915]
+
+tracking:
+  tracker_type: bytetrack
+  track_high_thresh: 0.6
+  track_low_thresh: 0.15
+  new_track_thresh: 0.5
+  track_buffer: 500
+  match_thresh: 0.85
+  fuse_score: True
+  min_track_frames: 5
+  ball_max_missing_frames: 45
+  ball_max_match_dist: 180.0
+  ball_confidence_threshold: 0.25
+
+team_classification:
+  unknown_threshold: 0.22
+  sticky_threshold: 0.55
+  min_samples_per_track: 2
+  min_tracks_to_fit: 8
+
+possession:
+  proximity_radius_m: 2.5
+  candidate_streak_threshold: 3
+
+pass_detection:
+  min_distance_m: 1.5
+  min_speed_ms: 2.0
+  reset_frames: 15
+
+shot_detection:
+  min_speed_ms: 7.0
+
+player_kinematics:
+  max_jump_m: 5.0
+  min_track_frames: 5
+  max_gap_frames: 3
+  duplicate_threshold_m: 0.1
+  smoothing_method: savgol
+  smoothing_window: 5
+  smoothing_polyorder: 2
+  heading_smooth_window: 3
+  max_speed_kmh: 40.0
+  max_acceleration_ms2: 10.0
+  rolling_window_frames: 5
+  sprint_speed_threshold_kmh: 25.0
+  sprint_min_duration_s: 2.0
+  sprint_min_distance_m: 10.0
+  high_intensity_speed_kmh: 20.0
+  high_intensity_min_duration_s: 3.0
+  high_intensity_min_distance_m: 15.0
+
+ball_analytics:
+  max_jump_m: 3.0
+  min_track_frames: 3
+  max_gap_frames: 2
+  duplicate_threshold_m: 0.05
+  smoothing_method: savgol
+  smoothing_window: 5
+  smoothing_polyorder: 2
+  max_speed_kmh: 120.0
+  max_acceleration_ms2: 50.0
+  rolling_window_frames: 5
+  possession_radius_m: 1.5
+  min_possession_duration_frames: 3
+  min_touch_duration_frames: 1
+  min_pass_distance_m: 1.0
+  max_pass_duration_s: 5.0
+  min_pass_speed_kmh: 5.0
+
+dataset:
+  enabled: true
+  save_every_n_frames: 1
+  crop_size: 256
+  padding: true
+  output_dir: "datasets/person_classifier"
+  contact_sheet_cols: 5
+  contact_sheet_rows: 4

@@ -1,0 +1,1 @@
+"""Team classification module for jersey color extraction and team assignment."""

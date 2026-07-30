@@ -1,0 +1,31 @@
+{
+  "field_dimensions": {
+    "length_m": 105.0,
+    "width_m": 68.0
+  },
+  "image_dimensions": {
+    "width_px": 1050,
+    "height_px": 680
+  },
+  "calibration_points": {
+    "source": [
+      [50.0, 300.0],
+      [1000.0, 300.0],
+      [1050.0, 600.0],
+      [0.0, 680.0]
+    ],
+    "destination": [
+      [0.0, 0.0],
+      [105.0, 0.0],
+      [105.0, 68.0],
+      [0.0, 68.0]
+    ]
+  },
+  "validation": {
+    "mean_reprojection_error": 1.5,
+    "m_per_px_cv": 0.1,
+    "validation_passed": true
+  },
+  "method": "manual",
+  "note": "Calibration points must be verified against actual video. Edit these values to match your specific video."
+}
