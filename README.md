@@ -26,9 +26,11 @@ The platform is built for match analysts, coaches, sports scientists, and develo
 
 ## 🎥 Processed Video Preview
 
-Watch the processed Match 1 output here:
+Click the moving preview below to open and play the full processed Match 1 video.
 
-[▶ Play Match 1 processed video](https://github.com/Dinil007/Stepout/blob/master/outputs/match1.mp4)
+[![Match 1 processed video preview](docs/assets/match1-preview.gif)](outputs/match1.mp4)
+
+[▶ Play full Match 1 video](outputs/match1.mp4)
 
 Direct repository path:
 
@@ -36,7 +38,7 @@ Direct repository path:
 outputs/match1.mp4
 `
 
-> GitHub README pages do not show inline HTML video players, so the play button opens the MP4 file in GitHub's video viewer.
+> GitHub README pages do not render inline MP4 players, so the animated preview is shown in the README and links to the playable video file.
 
 ---
 
