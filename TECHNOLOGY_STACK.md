@@ -1,33 +1,10 @@
-# StepOut 🏃
+# Stepout - Technology Stack & Architecture
 
-> AI-powered sports analytics platform for computer vision and athlete performance tracking.
-
-## Overview
-
-StepOut is a comprehensive computer vision and video analytics platform for football/soccer analysis. It provides real-time player detection, ball tracking, team classification, possession analysis, and tactical intelligence using state-of-the-art deep learning models.
-
----
-
-## Core Features
-
-- **Real-time Player Detection** using YOLOv8/YOLO11
-- **Ball Detection & Tracking** with Kalman Filter
-- **Multi-Object Player Tracking** with ByteTrack
-- **Team Classification** using Jersey Color Clustering (K-Means)
-- **Ball Possession Analysis** & Visualization
-- **Referee Detection** using EfficientNet-B0
-- **Pitch Mapping** via Homography Transformation
-- **Player Kinematics** (Speed, Acceleration, Trajectory)
-- **Tactical Formation Analysis**
-- **Anti-Flickering Mechanisms** for Stable Tracking
-
----
-
-## Technology Stack
+## 1. Core Frameworks & Libraries
 
 ### Deep Learning & Computer Vision
 - **PyTorch** - Primary deep learning framework
-- **YOLOv8/YOLO11** - Object detection models (yolov8n.pt, yolov8m.pt, yolov8x.pt)
+- **YOLOv8/YOLO11** - Object detection models (yolov8n.pt, yolov8m.pt, yolov8x.pt, yolo11l.pt, yolo11m.pt, yolo11x.pt)
 - **OpenCV (cv2)** - Image/video processing, frame extraction, visualization
 - **PIL/Pillow** - Image manipulation and preprocessing
 - **NumPy** - Numerical operations and array handling
@@ -48,13 +25,13 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 
 ### Data Processing
 - **scikit-learn** - Machine learning utilities (KMeans, metrics)
-- **pandas** - Data manipulation
+- **pandas** - Data manipulation (implied in analytics modules)
 
 ---
 
-## System Components
+## 2. System Components
 
-### Detection Pipeline (`app/detection/`)
+### A. Detection Pipeline (`app/detection/`)
 
 #### YOLO Detector (`yolo_detector.py`)
 - **Model:** YOLOv8/YOLO11 (ultralytics library)
@@ -68,13 +45,13 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 #### Ball Detector (`ball_detector.py`)
 - **Model:** Specialized YOLO for ball detection
 - **Configuration:**
-  - Confidence threshold: 0.05
-  - Image size: 1280
+  - Confidence threshold: 0.10
+  - Image size: 960
   - ROI filtering enabled
 
 ---
 
-### Tracking System (`app/tracking/`)
+### B. Tracking System (`app/tracking/`)
 
 #### Player Tracker (`bytetrack.py`)
 - **Algorithm:** ByteTrack (YOLO native tracking with persist=True)
@@ -90,8 +67,8 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
   - `BallTrack`: Track object with history
   - `BallTracker`: Main tracker with motion-consistency gating
 - **Key Parameters:**
-  - `max_missing_frames`: 60
-  - `max_match_dist`: 200.0 pixels
+  - `max_missing_frames`: 45
+  - `max_match_dist`: 180.0 pixels
   - `trajectory_len`: 45 frames
   - `kalman_enabled`: True
 
@@ -100,7 +77,7 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 
 ---
 
-### Team Classification (`app/team_classification/`)
+### C. Team Classification (`app/team_classification/`)
 
 #### Color Extractor (`color_extractor.py`)
 - Extracts jersey colors from player bounding boxes
@@ -109,10 +86,10 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 #### Team Classifier (`team_classifier.py`)
 - **Algorithm:** K-Means clustering (2 clusters)
 - **Method:**
-  - Collects color samples during warmup phase (0 frames for immediate classification)
+  - Collects color samples during warmup phase (100 frames)
   - Trains KMeans model to identify two dominant team colors
   - Assigns players to teams based on jersey color
-- **Team Names:** Red (label 0), Blue (label 1)
+- **Team Names:** Red (label 1), Blue (label 0)
 - **Fallback:** Majority vote over recent frames for robustness
 
 #### Jersey Classifier (`jersey_classifier.py`)
@@ -131,22 +108,22 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 
 ---
 
-### Ball Analytics (`app/analytics/ball_analytics/`)
+### D. Ball Analytics (`app/analytics/ball_analytics/`)
 
 #### Possession Detection (`possession.py`)
 - **Algorithm:** Distance-based possession detection
 - **Logic:**
   - Player position: feet (bottom center of bbox)
   - Ball position: center from tracking
-  - Distance threshold: 150 pixels
-  - Confirmation frames: 3 consecutive frames (anti-flicker)
+  - Distance threshold: 120 pixels
+  - Confirmation frames: 10 consecutive frames (anti-flicker)
 - **Output:**
   - Possessor ID and team
   - Possession percentages
   - State: "In Possession", "Free Ball", "Contested/Transitioning"
 
 #### Visualization (`visualization.py`)
-- Stats box (top-left corner)
+- Stats box (top-right corner)
 - Team possession percentages
 - Possessor display
 - Possession line (player feet to ball)
@@ -163,7 +140,7 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 
 ---
 
-### Player Kinematics (`app/analytics/player_kinematics/`)
+### E. Player Kinematics (`app/analytics/player_kinematics/`)
 
 - `speed.py` - Player speed estimation
 - `acceleration.py` - Acceleration calculation
@@ -174,7 +151,7 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 
 ---
 
-### Homography & Pitch Mapping (`app/homography/`)
+### F. Homography & Pitch Mapping (`app/homography/`)
 
 - `homography_estimator.py` - Perspective transform estimation
 - `coordinate_transform.py` - Pixel to pitch coordinates
@@ -187,9 +164,115 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 
 ---
 
-## Data Flow
+### G. Advanced Analytics
 
-```text
+#### Formation Detection (`app/analytics/formation_detector.py`)
+- Team formation recognition
+- Player role assignment
+
+#### Tactical Engine (`app/analytics/tactical_engine.py`)
+- Tactical analysis (pressing, passing networks)
+
+#### Pressing Detector (`app/analytics/pressing_detector.py`)
+- Pressing intensity analysis
+
+#### xG/xA/xT Models (`app/analytics/`)
+- Expected Goals (xg_engine.py)
+- Expected Assists (xa_engine.py)
+- Expected Threat (xt_engine.py)
+
+#### Intelligence Engine (`app/analytics/intelligence_engine.py`)
+- Match analysis automation
+- LLM-powered insights
+
+---
+
+### H. AI/LLM Components (`app/ai/`)
+
+- `match_analyst.py` - AI match analyst
+- `prompt_builder.py` - LLM prompt construction
+- `aggregator.py` - Data aggregation for AI
+- `recommendations.py` - Tactical recommendations
+- `report_generator.py` - Automated report generation
+- `sql_agent.py` - Natural language to SQL
+
+---
+
+### I. API Layer (`app/api/`)
+
+#### FastAPI Routers
+- `matches.py` - Match endpoints
+- `players.py` - Player endpoints
+- `teams.py` - Team endpoints
+- `reports.py` - Report generation
+- `season.py` - Season analysis
+- `admin.py` - Admin functions
+- `auth.py` - Authentication
+
+#### Services (`app/api/services/`)
+- `match_service.py` - Match business logic
+- `player_service.py` - Player business logic
+- `team_service.py` - Team business logic
+
+---
+
+### J. Dashboard (`app/dashboard/`)
+
+#### Pages
+1. Match Analysis
+2. Player Analysis
+3. Team Analysis
+4. Heatmaps
+5. AI Chat
+6. Expected Goals
+7. Expected Assists
+8. Expected Threat
+9. Formation Intelligence
+10. Pressing Intelligence
+11. Tactical Analytics
+
+---
+
+### K. Pipeline (`app/pipeline/`)
+
+- `pipeline_manager.py` - Orchestration
+- `stages.py` - Processing stages
+- `data_models.py` - Data structures
+- `pipeline_logger.py` - Logging
+
+---
+
+## 3. Anti-Flickering Mechanisms
+
+### 1. Confirmation Frames (Ball Possession)
+- **Parameter:** `POSSESSION_CONFIRMATION_FRAMES = 10`
+- **Method:** Player must be closest to ball for N consecutive frames
+- **Purpose:** Prevents rapid possession changes
+
+### 2. Kalman Filter (Ball Tracking)
+- **Method:** Predicts next position using constant velocity model
+- **Purpose:** Smooths ball trajectory, handles missing detections
+
+### 3. Team Classification History
+- **Parameter:** `history_len = 30` frames
+- **Method:** Majority vote over recent color samples
+- **Purpose:** Stable team assignments despite lighting changes
+
+### 4. Manual Overrides
+- **Method:** Manual team assignment for problematic tracks
+- **Example:** `MANUAL_TEAM_OVERRIDES = {8: 0, 13: 1, 44: 1}`
+
+### 5. Track ID Stability
+- **Method:** ByteTrack with persist=True
+- **Metrics:**
+  - Gap detection between frames
+  - Stability threshold: ≤5 frames gap
+
+---
+
+## 4. Data Flow
+
+```
 Video Input (OpenCV)
     ↓
 YOLO Detection (Players + Ball)
@@ -217,35 +300,7 @@ Dashboard (Streamlit)
 
 ---
 
-## Anti-Flickering Mechanisms
-
-### 1. Confirmation Frames (Ball Possession)
-- **Parameter:** `POSSESSION_CONFIRMATION_FRAMES = 3`
-- **Method:** Player must be closest to ball for N consecutive frames
-- **Purpose:** Prevents rapid possession changes
-
-### 2. Kalman Filter (Ball Tracking)
-- **Method:** Predicts next position using constant velocity model
-- **Purpose:** Smooths ball trajectory, handles missing detections
-
-### 3. Team Classification History
-- **Parameter:** `history_len = 30` frames
-- **Method:** Majority vote over recent color samples
-- **Purpose:** Stable team assignments despite lighting changes
-
-### 4. Manual Overrides
-- **Method:** Manual team assignment for problematic tracks
-- **Example:** `MANUAL_TEAM_OVERRIDES = {8: 0, 13: 1, 44: 1}`
-
-### 5. Track ID Stability
-- **Method:** ByteTrack with persist=True
-- **Metrics:**
-  - Gap detection between frames
-  - Stability threshold: ≤5 frames gap
-
----
-
-## Key Models & Their Roles
+## 5. Key Models & Their Roles
 
 | Model | Purpose | Location |
 |-------|---------|----------|
@@ -258,136 +313,41 @@ Dashboard (Streamlit)
 
 ---
 
-## Project Structure
+## 6. Visualization Stack
 
-```
-stepout/
-│
-├── app/                        # Core application logic
-│   ├── detection/              # YOLO detection modules
-│   │   ├── yolo_detector.py
-│   │   ├── ball_detector.py
-│   │   └── detection_filter.py
-│   ├── tracking/               # Tracking modules
-│   │   ├── bytetrack.py
-│   │   ├── ball_tracker.py
-│   │   ├── reid.py
-│   │   └── tracker_config.py
-│   ├── team_classification/    # Team classification
-│   │   ├── team_classifier.py
-│   │   ├── color_extractor.py
-│   │   ├── jersey_classifier.py
-│   │   └── visualize_teams.py
-│   ├── analytics/              # Analytics modules
-│   │   ├── ball_analytics/
-│   │   ├── player_kinematics/
-│   │   └── ball_possession.py
-│   ├── homography/             # Pitch mapping
-│   ├── classification/         # Person classification
-│   ├── pose/                   # Pose estimation
-│   ├── preprocessing/          # Video preprocessing
-│   └── visualization/          # Visualization tools
-├── backend/                    # FastAPI backend server
-├── frontend/                   # Streamlit / UI frontend
-├── models/                     # Trained ML/CV models
-│   ├── yolov8x.pt
-│   ├── yolov8n.pt
-│   └── yolov8m.pt
-├── datasets/                   # Training & evaluation datasets
-│   └── person_classifier/
-├── videos/                     # Input video files
-│   └── raw/
-├── outputs/                    # Processed outputs
-│   ├── detected_video.mp4
-│   └── detection_report.txt
-├── configs/                    # Configuration files
-│   ├── pitch_roi.json
-│   ├── homography_calibration.json
-│   └── bytetrack_custom.yaml
-├── scripts/                    # Utility scripts
-├── notebooks/                  # Jupyter notebooks
-├── utils/                      # Shared utility functions
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-├── .env
-└── README.md
-```
+### OpenCV (`cv2`)
+- Frame annotation
+- Bounding boxes
+- Arrows and lines
+- Circles and trails
+- Text rendering
+
+### Streamlit
+- Interactive dashboard
+- Real-time video playback
+- Charts and statistics
+- Tactical visualizations
 
 ---
 
-## Setup
+## 7. Configuration & Calibration
 
-```bash
-# Clone the repo
-git clone <repo-url>
-cd stepout
+### ROI (Region of Interest)
+- **File:** `configs/pitch_roi.json`
+- **Purpose:** Filters detections to pitch area only
+- **Format:** Quadrilateral polygon [[x1,y1], [x2,y2], [x3,y3], [x4,y4]]
 
-# Create virtual environment
-python -m venv venv
-venv\Scripts\activate
+### Homography
+- **File:** `configs/homography_calibration.json`
+- **Purpose:** Camera to pitch coordinate mapping
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Copy env template and fill in values
-cp .env.example .env
-```
+### Tracker Config
+- **File:** `app/tracking/bytetrack_custom.yaml`
+- **Parameters:** Track buffer, match thresholds
 
 ---
 
-## Running
-
-```bash
-# Run detection and validation
-python validate_detection_only.py
-
-# Backend
-uvicorn backend.main:app --reload
-
-# Frontend
-streamlit run frontend/app.py
-
-# Docker
-docker-compose up --build
-```
-
----
-
-## Configuration
-
-### Ball Detection Configuration
-```python
-ENABLE_BALL_DETECTION = True
-BALL_CONFIDENCE_THRESHOLD = 0.05
-BALL_IMAGE_SIZE = 1280
-BALL_MAX_MATCH_DIST = 200.0
-BALL_MAX_MISSING_FRAMES = 60
-BALL_INTERPOLATION_MAX_GAP = 30
-```
-
-### Team Classification Configuration
-```python
-ENABLE_TEAM_CLASSIFICATION = True
-WARMUP_FRAMES = 0  # Immediate classification
-TEAM_CLASSIFIER_HISTORY_LEN = 30
-MANUAL_TEAM_OVERRIDES = {
-    8: 0,   # Track 8 -> Red
-    13: 1,  # Track 13 -> Blue
-    44: 1,  # Track 44 -> Blue
-}
-```
-
-### Ball Possession Configuration
-```python
-ENABLE_POSSESSION_ANALYTICS = True
-POSSESSION_RADIUS_M = 150.0
-POSSESSION_CONFIRMATION_FRAMES = 3
-```
-
----
-
-## Performance Optimizations
+## 8. Performance Optimizations
 
 1. **GPU Acceleration**
    - CUDA for YOLO inference
@@ -409,29 +369,12 @@ POSSESSION_CONFIRMATION_FRAMES = 3
 
 ---
 
-## Visualization Stack
-
-### OpenCV (`cv2`)
-- Frame annotation
-- Bounding boxes
-- Arrows and lines
-- Circles and trails
-- Text rendering
-
-### Streamlit
-- Interactive dashboard
-- Real-time video playback
-- Charts and statistics
-- Tactical visualizations
-
----
-
-## Testing & Validation
+## 9. Testing & Validation
 
 ### Test Files
-- `tests/test_ball_detector.py` - Ball detection tests
-- `tests/test_possession_implementation.py` - Possession logic
-- `tests/test_homography_speed_distance_integration.py` - Integration tests
+- `test_possession_implementation.py` - Possession logic
+- `test_homography_speed_distance_integration.py` - Integration tests
+- `tests/` - Unit tests for various modules
 
 ### Validation Scripts
 - `validate_tracking.py` - Tracking accuracy
@@ -441,7 +384,7 @@ POSSESSION_CONFIRMATION_FRAMES = 3
 
 ---
 
-## Technology Summary
+## 10. Technology Summary
 
 | Category | Technologies |
 |----------|-------------|
@@ -454,10 +397,18 @@ POSSESSION_CONFIRMATION_FRAMES = 3
 | **Frontend** | Streamlit |
 | **Database** | SQLite/PostgreSQL (configurable) |
 | **Deployment** | Docker |
-| **Visualization** | Matplotlib, OpenCV |
+| **Visualization** | Matplotlib (implied), OpenCV |
 
 ---
 
-## License
+## 11. Anti-Flickering Summary
 
-MIT License
+1. **Possession Confirmation:** 10 consecutive frames required
+2. **Kalman Prediction:** Smooths ball trajectory
+3. **Team Voting:** 30-frame history majority vote
+4. **Manual Overrides:** Human-in-the-loop corrections
+5. **Track Stability:** ByteTrack persist=True with gap monitoring
+
+---
+
+*Generated for Stepout Football Analytics Platform*

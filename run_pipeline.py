@@ -12,6 +12,7 @@ import sys
 import time
 import json
 import logging
+import argparse
 from pathlib import Path
 from typing import Dict, List, Tuple, Optional, Any
 
@@ -37,6 +38,7 @@ from app.homography.field_config import (
 from app.homography.homography_utils import compute_homography, transform_points
 from app.homography.pitch_mapper import PitchMapper, PlayerMapping
 from app.homography.visualize_pitch import PitchVisualizer
+from app.analytics.team_density import TeamDensityAnalytics
 
 # Setup logging configuration
 logging.basicConfig(
@@ -87,6 +89,7 @@ class FootballAnalyticsPipeline:
             "heatmap": self.output_dir / "heatmap.png",
             "csv_stats": self.output_dir / "player_statistics.csv",
             "json_analytics": self.output_dir / "analytics.json",
+            "tracking_telemetry": self.output_dir / "tracking_telemetry.json",
             "speed_debug": self.output_dir / "speed_debug.csv",
             "rejected_log": self.output_dir / "rejected_observations.csv",
             "final_analytics": self.output_dir / "final_analytics_demo.mp4",
@@ -157,6 +160,17 @@ class FootballAnalyticsPipeline:
             # PHASE 8: Analytics
             df_stats = self._phase8_analytics(player_telemetry, 25.0)
 
+            # PHASE 8B: Product analytics artifacts for the dashboard
+            self._stage_heatmap_generation(all_mapped_players)
+            self._stage_save_metadata(player_telemetry, df_stats, 25.0)
+
+            # Generate V1 analytics (team analytics, density maps, ball trajectory)
+            try:
+                from scripts.generate_v1_analytics import generate_all_analytics
+                generate_all_analytics(self.output_dir, {})
+            except Exception as analytics_error:
+                logger.warning(f"V1 analytics generation failed: {analytics_error}")
+
             # PHASE 9: Final Integrated Video
             self._phase9_final_video(model, all_mapped_players, player_telemetry, df_stats)
 
@@ -172,7 +186,7 @@ class FootballAnalyticsPipeline:
             raise e
 
     def _phase1_verify_input(self):
-        """PHASE 1 – VERIFY INPUT VIDEO."""
+        """PHASE 1 - VERIFY INPUT VIDEO."""
         t0 = time.time()
         logger.info("[PHASE 1] Ingesting & Preprocessing Video...")
 
@@ -194,7 +208,7 @@ class FootballAnalyticsPipeline:
 
         cap.release()
         self.stage_timings["Phase 1: Verify Input"] = time.time() - t0
-        print("✓ Phase 1 Complete\n")
+        print("OK Phase 1 Complete\n")
 
     def _phase2_3_4_prepare_models(self):
         """PHASE 2/3/4: Prepare detectors for players, ball, referee."""
@@ -229,7 +243,7 @@ class FootballAnalyticsPipeline:
         ) = self._stage_computer_vision_and_tracking(cap, 25.0, 1280, 720, self.max_frames)
 
         self.stage_timings["Phase 5/6: Tracking + Teams"] = time.time() - t0
-        print("✓ Phase 5/6 Complete\n")
+        print("OK Phase 5/6 Complete\n")
         return all_mapped_players, all_raw_tracks, player_histories, player_telemetry
 
     def _phase7_homography_validate(self):
@@ -245,7 +259,7 @@ class FootballAnalyticsPipeline:
         logger.info(f"Homography validation sample: {test_pt[0]} -> {dst[0][0]}")
 
         self.stage_timings["Phase 7: Homography"] = time.time() - t0
-        print("✓ Phase 7 Complete\n")
+        print("OK Phase 7 Complete\n")
 
     def _phase8_analytics(self, player_telemetry, fps):
         """PHASE 8: Analytics validation."""
@@ -255,7 +269,7 @@ class FootballAnalyticsPipeline:
         df_stats = self._stage_analytics(player_telemetry, fps)
 
         self.stage_timings["Phase 8: Analytics"] = time.time() - t0
-        print("✓ Phase 8 Complete\n")
+        print("OK Phase 8 Complete\n")
         return df_stats
 
     def _phase9_final_video(self, model, all_mapped_players, player_telemetry, df_stats):
@@ -333,7 +347,7 @@ class FootballAnalyticsPipeline:
         writer.release()
         self.stage_timings["Phase 9: Final Video"] = time.time() - t0
         logger.info(f"Final analytics video saved to: {out_path}")
-        print("✓ Phase 9 Complete\n")
+        print("OK Phase 9 Complete\n")
 
     def _stage_preprocessing(self) -> Tuple[cv2.VideoCapture, float, int, int, int]:
         """Stage 1: Video ingestion & preprocessing verification."""
@@ -375,8 +389,8 @@ class FootballAnalyticsPipeline:
         cap.set(cv2.CAP_PROP_POS_FRAMES, 0)  # Reset stream position
 
         self.stage_timings["1. Video Preprocessing"] = time.time() - t0
-        print("✓ Video Loaded")
-        print("✓ Preprocessing Completed")
+        print("OK Video Loaded")
+        print("OK Preprocessing Completed")
         return cap, fps, width, height, frames_to_read
 
     def _stage_computer_vision_and_tracking(
@@ -627,11 +641,11 @@ class FootballAnalyticsPipeline:
         self.stage_timings["5. Homography Mapping"] = (time.time() - t0) * 0.15
         self.stage_timings["6. Pitch Visualization"] = (time.time() - t0) * 0.15
 
-        print("\n✓ Detection Completed")
-        print("✓ Tracking Completed")
-        print("✓ Team Classification Completed")
-        print("✓ Homography Completed")
-        print("✓ Pitch Visualization Completed")
+        print("\nOK Detection Completed")
+        print("OK Tracking Completed")
+        print("OK Team Classification Completed")
+        print("OK Homography Completed")
+        print("OK Pitch Visualization Completed")
         
         # Verify pitch_view output
         pitch_output_path = self.outputs["pitch_view"]
@@ -763,8 +777,8 @@ class FootballAnalyticsPipeline:
         if max_speed_overall > 35.0:
             logger.warning(f"High speed detected: {max_speed_overall:.1f} km/h (capped at 37 km/h)")
         
-        print("✓ Speed Estimation Completed")
-        print("✓ Distance Tracking Completed")
+        print("OK Speed Estimation Completed")
+        print("OK Distance Tracking Completed")
 
         return df_stats
 
@@ -801,7 +815,7 @@ class FootballAnalyticsPipeline:
         cv2.imwrite(str(self.outputs["heatmap"]), overlay)
 
         self.stage_timings["9. Heatmap Generation"] = time.time() - t0
-        print("✓ Heatmap Generated")
+        print("OK Heatmap Generated")
 
     def _stage_save_metadata(
         self,
@@ -834,6 +848,23 @@ class FootballAnalyticsPipeline:
         with open(self.outputs["json_analytics"], "w") as f:
             json.dump(analytics_summary, f, indent=4)
 
+        telemetry_export = {
+            str(track_id): {
+                "team_id": data.get("team_id"),
+                "frames": data.get("frames", []),
+                "positions_px": [
+                    [float(pos[0]), float(pos[1])]
+                    for pos in data.get("positions_px", [])
+                ],
+                "positions_m": [
+                    [float(pos[0]), float(pos[1])]
+                    for pos in data.get("positions_m", [])
+                ],
+            }
+            for track_id, data in player_telemetry.items()
+        }
+        with open(self.outputs["tracking_telemetry"], "w") as f:
+            json.dump(telemetry_export, f, indent=2)
         # Save rejection log
         if self.rejected_log:
             rejected_df = pd.DataFrame(self.rejected_log)
@@ -850,10 +881,42 @@ class FootballAnalyticsPipeline:
         logger.info("--------------------------------")
 
 
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Run the StepOut football analytics pipeline.")
+    parser.add_argument(
+        "--video",
+        "--input",
+        dest="video",
+        default="D:/stepout/videos/raw/match30.mp4",
+        help="Path to the source match video.",
+    )
+    parser.add_argument(
+        "--output",
+        dest="output",
+        default="outputs",
+        help="Directory where pipeline artifacts should be written.",
+    )
+    parser.add_argument(
+        "--max_frames",
+        type=int,
+        default=500,
+        help="Maximum number of frames to process.",
+    )
+    parser.add_argument(
+        "--weights",
+        default="yolov8x.pt",
+        help="YOLO model weights path.",
+    )
+    return parser.parse_args()
+
+
 if __name__ == "__main__":
+    args = parse_args()
     pipeline = FootballAnalyticsPipeline(
-        input_video_path="D:/stepout/videos/raw/match30.mp4",
-        output_dir="outputs",
-        max_frames=500
+        input_video_path=args.video,
+        output_dir=args.output,
+        model_weights=args.weights,
+        max_frames=args.max_frames
     )
     pipeline.run_pipeline()
+

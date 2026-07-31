@@ -27,28 +27,20 @@ class TeamVisualizer:
             (255,255,255)
         )
 
-        # Reduce bounding box size by 10% on each side
-        box_width = x2 - x1
-        box_height = y2 - y1
-        x1_new = x1 + int(box_width * 0.1)
-        y1_new = y1 + int(box_height * 0.1)
-        x2_new = x2 - int(box_width * 0.1)
-        y2_new = y2 - int(box_height * 0.1)
-
-        # Bounding Box (reduced size)
+        # Bounding Box
         cv2.rectangle(
             frame,
-            (x1_new, y1_new),
-            (x2_new, y2_new),
+            (x1,y1),
+            (x2,y2),
             color,
             2
         )
 
-        # Background for text (use original y1 for text positioning)
+        # Background for text
         cv2.rectangle(
             frame,
-            (x1, y1_new - 30),
-            (x2, y1_new),
+            (x1,y1-30),
+            (x2,y1),
             color,
             -1
         )
@@ -58,10 +50,10 @@ class TeamVisualizer:
         cv2.putText(
             frame,
             label,
-            (x1 + 5, y1_new - 8),
+            (x1+5,y1-8),
             cv2.FONT_HERSHEY_SIMPLEX,
             0.5,
-            (255, 255, 255),
+            (255,255,255),
             2
         )
 

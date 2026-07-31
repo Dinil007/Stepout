@@ -30,6 +30,7 @@ from app.pipeline.stages import (
     BallAnalyticsStage, BiomechanicsStage, VisualizationStage,
     ExportStage
 )
+from app.analytics.team_density import TeamDensityAnalytics
 
 
 class PipelineManager:
