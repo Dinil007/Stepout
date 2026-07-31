@@ -10,7 +10,7 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 
 ## Core Features
 
-- **Real-time Player Detection** using YOLOv8/YOLO11
+- **Real-time Player Detection** using YOLOv8x
 - **Ball Detection & Tracking** with Kalman Filter
 - **Multi-Object Player Tracking** with ByteTrack
 - **Team Classification** using Jersey Color Clustering (K-Means)
@@ -27,7 +27,7 @@ StepOut is a comprehensive computer vision and video analytics platform for foot
 
 ### Deep Learning & Computer Vision
 - **PyTorch** - Primary deep learning framework
-- **YOLOv8/YOLO11** - Object detection models (yolov8n.pt, yolov8m.pt, yolov8x.pt)
+- **YOLOv8x** - Object detection model (yolov8x.pt)
 - **OpenCV (cv2)** - Image/video processing, frame extraction, visualization
 - **PIL/Pillow** - Image manipulation and preprocessing
 - **NumPy** - Numerical operations and array handling
