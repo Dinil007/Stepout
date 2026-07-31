@@ -26,26 +26,17 @@ The platform is built for match analysts, coaches, sports scientists, and develo
 
 ## 🎥 Processed Video Preview
 
-Add your processed match video inside:
+Watch the processed Match 1 output here:
 
-```text
-D:\stepout\output\match1
-```
+[▶ Play Match 1 processed video](https://github.com/Dinil007/Stepout/blob/master/outputs/match1.mp4)
 
-Recommended README preview path:
+Direct repository path:
 
-```text
-output/match1/match1.mp4
-```
+`	ext
+outputs/match1.mp4
+`
 
-<video controls width="100%" preload="metadata">
-  <source src="output/match1/match1.mp4" type="video/mp4">
-  Your browser does not support embedded video playback. Open output/match1/match1.mp4 directly.
-</video>
-
-[Open Match 1 processed video](output/match1/match1.mp4)
-
-> Note: `D:\stepout\output\match1` is the target folder. Save the processed video as `match1.mp4` in this folder so the README video player and direct link work correctly.
+> GitHub README pages do not show inline HTML video players, so the play button opens the MP4 file in GitHub's video viewer.
 
 ---
 
@@ -181,9 +172,8 @@ stepout/
 │   └── visualization/
 ├── configs/
 ├── docs/
-├── output/
-│   └── match1/
-│       └── match1.mp4
+├── outputs/
+│   └── match1.mp4
 ├── scripts/
 ├── streamlit/
 ├── tests/
@@ -290,10 +280,10 @@ POSSESSION_CONFIRMATION_FRAMES = 3
 
 | Output | Purpose |
 |--------|---------|
-| `output/match1/match1.mp4` | Processed match video with visual overlays |
-| `output/match1/detection_report.txt` | Detection and tracking summary |
-| `output/match1/analytics.json` | Structured analytics export |
-| `output/match1/frames/` | Optional extracted or annotated frame outputs |
+| `outputs/match1.mp4` | Processed match video with visual overlays |
+| `outputs/detection_report.txt` | Detection and tracking summary |
+| `outputs/analytics.json` | Structured analytics export |
+| `outputs/frames/` | Optional extracted or annotated frame outputs |
 
 ---
 
