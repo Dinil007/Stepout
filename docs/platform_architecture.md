@@ -863,7 +863,7 @@ Get team season statistics.
 1. **Overview**
    - Player info card (photo, name, position, team)
    - Season statistics grid
-   - Key metrics (rating, xG, xA, distance, speed)
+   - Key metrics (rating, distance, speed, possession impact)
    - Strengths/Weaknesses tags
 
 2. **Match History**
@@ -913,12 +913,11 @@ Get team season statistics.
 3. **Tactical Trends**
    - Possession trend line chart
    - Pressing trend (PPDA) line chart
-   - xG trend line chart
    - Home vs Away comparison
 
 4. **Season Statistics**
    - Goals scored/conceded
-   - xG/xA/xT totals
+   - Possession, passing, and pressing totals
    - Passing networks
    - Shot maps
 
@@ -964,7 +963,6 @@ Get team season statistics.
 5. **Best/Worst Performers**
    - Top 3 players (rating)
    - Bottom 3 players (rating)
-   - Compare xG vs actual goals
 
 6. **Player Ratings**
    - Table with all players
@@ -975,8 +973,8 @@ Get team season statistics.
    - Overall team rating
    - Component scores (attack, defense, midfield)
 
-8. **xG Timeline**
-   - Cumulative xG chart
+8. **Shot Timeline**
+   - Cumulative shot chart
    - Shot map overlay
 
 9. **Pass Network**
@@ -1449,7 +1447,7 @@ async def get_matches():
 **Features:**
 - Team overview
 - Formation history timeline
-- Tactical trends (possession, PPDA, xG)
+- Tactical trends (possession, PPDA, pressing)
 - Season statistics
 - Team intelligence summary
 

@@ -35,14 +35,17 @@ D:\stepout\output\match1
 Recommended README preview path:
 
 ```text
-output/match1/processed_video.mp4
+output/match1/match1.mp4
 ```
 
-<video src="output/match1/processed_video.mp4" controls width="100%">
-  Your browser does not support embedded video playback. Open output/match1/processed_video.mp4 directly.
+<video controls width="100%" preload="metadata">
+  <source src="output/match1/match1.mp4" type="video/mp4">
+  Your browser does not support embedded video playback. Open output/match1/match1.mp4 directly.
 </video>
 
-> Note: `D:\stepout\output\match1` is the target folder. If your generated file has a different name, update the video source above to match the exact `.mp4` file.
+[Open Match 1 processed video](output/match1/match1.mp4)
+
+> Note: `D:\stepout\output\match1` is the target folder. Save the processed video as `match1.mp4` in this folder so the README video player and direct link work correctly.
 
 ---
 
@@ -57,7 +60,6 @@ output/match1/processed_video.mp4
 - 🗺️ **Pitch Mapping** through homography transformation
 - 🚀 **Player Kinematics** for speed, acceleration, sprinting, and trajectory analysis
 - 🧠 **Tactical Intelligence** for formations, pressing, and match patterns
-- 📈 **Expected Metrics** including xG, xA, and xT modules
 - 🖥️ **Interactive Dashboard** with Streamlit visual analytics
 - 🔌 **REST API Layer** with FastAPI services
 
@@ -72,7 +74,7 @@ output/match1/processed_video.mp4
 | Computer Vision | 👁️ 🎞️ | OpenCV, PIL/Pillow |
 | Tracking | 🛰️ 📍 | ByteTrack, Kalman Filter, ReID |
 | Analytics | 📊 🧮 | NumPy, pandas, scikit-learn |
-| Tactical Models | ⚽ 🗺️ | xG, xA, xT, formations, pressing analytics |
+| Tactical Models | ⚽ 🗺️ | formations, pressing analytics |
 | Backend | ⚡ 🗄️ | FastAPI, SQLAlchemy |
 | Dashboard | 🖥️ 📈 | Streamlit, OpenCV visual overlays |
 | Data & Config | 🧾 ⚙️ | YAML, JSON, SQLite/PostgreSQL |
@@ -139,9 +141,6 @@ Located in `app/analytics/`
 
 - `ball_analytics/` - possession, pass detection, speed, trajectory, touches
 - `player_kinematics/` - speed, acceleration, sprinting, direction, smoothing
-- `xg_engine.py` - expected goals
-- `xa_engine.py` - expected assists
-- `xt_engine.py` - expected threat
 - `pressing_engine.py` - pressing intelligence
 - `tactical_engine.py` - tactical match analysis
 
@@ -184,7 +183,7 @@ stepout/
 ├── docs/
 ├── output/
 │   └── match1/
-│       └── processed_video.mp4
+│       └── match1.mp4
 ├── scripts/
 ├── streamlit/
 ├── tests/
@@ -291,7 +290,7 @@ POSSESSION_CONFIRMATION_FRAMES = 3
 
 | Output | Purpose |
 |--------|---------|
-| `output/match1/processed_video.mp4` | Processed match video with visual overlays |
+| `output/match1/match1.mp4` | Processed match video with visual overlays |
 | `output/match1/detection_report.txt` | Detection and tracking summary |
 | `output/match1/analytics.json` | Structured analytics export |
 | `output/match1/frames/` | Optional extracted or annotated frame outputs |
@@ -311,7 +310,6 @@ Important validation areas:
 - ⚽ Ball tracking and interpolation
 - 👕 Team classification
 - 🗺️ Homography calibration
-- 📊 xG, xA, xT analytics
 - 🧠 Tactical and pressing intelligence
 
 ---

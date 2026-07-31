@@ -203,9 +203,6 @@
 3. Team Analysis
 4. Heatmaps
 5. AI Chat
-6. Expected Goals
-7. Expected Assists
-8. Expected Threat
 9. Formation Intelligence
 10. Pressing Intelligence
 11. Tactical Analytics
@@ -268,7 +265,7 @@ Distance Calculation (Possession)
     ↓
 Homography (Pitch Mapping)
     ↓
-Analytics (Speed, Passes, Shots, xG)
+Analytics (Speed, Passes, Shots)
     ↓
 Visualization (OpenCV + Streamlit)
     ↓
