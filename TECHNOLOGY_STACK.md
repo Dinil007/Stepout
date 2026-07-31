@@ -4,7 +4,7 @@
 
 ### Deep Learning & Computer Vision
 - **PyTorch** - Primary deep learning framework
-- **YOLOv8/YOLO11** - Object detection models (yolov8n.pt, yolov8m.pt, yolov8x.pt, yolo11l.pt, yolo11m.pt, yolo11x.pt)
+- **YOLOv8x** - Object detection model (yolov8x.pt)
 - **OpenCV (cv2)** - Image/video processing, frame extraction, visualization
 - **PIL/Pillow** - Image manipulation and preprocessing
 - **NumPy** - Numerical operations and array handling
@@ -34,7 +34,7 @@
 ### A. Detection Pipeline (`app/detection/`)
 
 #### YOLO Detector (`yolo_detector.py`)
-- **Model:** YOLOv8/YOLO11 (ultralytics library)
+- **Model:** YOLOv8x (ultralytics library)
 - **Purpose:** Player and ball detection
 - **Configuration:**
   - Confidence threshold: 0.25
@@ -164,27 +164,6 @@
 
 ---
 
-### G. Advanced Analytics
-
-#### Formation Detection (`app/analytics/formation_detector.py`)
-- Team formation recognition
-- Player role assignment
-
-#### Tactical Engine (`app/analytics/tactical_engine.py`)
-- Tactical analysis (pressing, passing networks)
-
-#### Pressing Detector (`app/analytics/pressing_detector.py`)
-- Pressing intensity analysis
-
-#### xG/xA/xT Models (`app/analytics/`)
-- Expected Goals (xg_engine.py)
-- Expected Assists (xa_engine.py)
-- Expected Threat (xt_engine.py)
-
-#### Intelligence Engine (`app/analytics/intelligence_engine.py`)
-- Match analysis automation
-- LLM-powered insights
-
 ---
 
 ### H. AI/LLM Components (`app/ai/`)
@@ -304,7 +283,7 @@ Dashboard (Streamlit)
 
 | Model | Purpose | Location |
 |-------|---------|----------|
-| YOLOv8/YOLO11 | Object detection (players, ball) | `app/detection/yolo_detector.py` |
+| YOLOv8x | Object detection (players, ball) | `app/detection/yolo_detector.py` |
 | BallDetector (YOLO) | Ball-specific detection | `app/detection/ball_detector.py` |
 | EfficientNet-B0 | Referee/Coach classification | `app/classification/` |
 | KMeans | Team color clustering | `app/team_classification/team_classifier.py` |
@@ -389,7 +368,7 @@ Dashboard (Streamlit)
 | Category | Technologies |
 |----------|-------------|
 | **Language** | Python 3.8+ |
-| **Deep Learning** | PyTorch, YOLOv8/YOLO11, EfficientNet-B0 |
+| **Deep Learning** | PyTorch, YOLOv8x, EfficientNet-B0 |
 | **Computer Vision** | OpenCV, PIL/Pillow |
 | **Tracking** | ByteTrack, Kalman Filter |
 | **ML/Analytics** | scikit-learn (KMeans), NumPy, pandas |
